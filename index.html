@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pronto Host</title>
+<meta name="description" content="Pronto Host is an AI phone host for restaurants in Vaughan, Woodbridge and Richmond Hill. It takes bookings and take-out orders in English, Italian and Spanish, and texts you everything.">
+<meta property="og:title" content="Pronto Host">
+<meta property="og:description" content="Friday at 7. Every call answered. An AI phone host for GTA restaurants, set up in person by Matteo from Maple.">
+<meta property="og:image" content="https://lalolan123.github.io/prontohost/og-image.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FFF5E4">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@500;600&family=Shrikhand&display=swap">
+<style>
+/* Layout: one page that sounds like a restaurant phone being picked up. "Pronto?" is how Italians answer;
+   the hero holds a kitchen ticket the host printed, with the door sticker slapped on it.
+   Bands alternate cream, kraft and ink. Light only, on purpose. */
+:root{
+  color-scheme: light;
+  --tomato:#D8371F;    /* logo, sticker, big numbers and big shapes */
+  --red:#C93019;       /* grounds that carry cream text: buttons, the trial band */
+  --red-text:#B42A16;  /* small red text on cream, kraft or white */
+  --ink:#1B1714;       /* text, the dark band, the footer */
+  --soft:#5A4E44;      /* secondary text on light grounds */
+  --cream:#FFF5E4;     /* page */
+  --kraft:#F5E3C3;     /* alternate bands, like a pizza box */
+  --paper:#FFFFFF;     /* cards and the ticket */
+  --rule:rgba(27,23,20,.14);
+  --bright:#FF5B3F;    /* red on ink */
+  --ink-soft:#D8CBB6;  /* secondary text on ink */
+  --ink-rule:rgba(255,245,228,.16);
+  --logo:"Shrikhand", Georgia, "Times New Roman", serif;
+  --sans:"Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --step--1:clamp(.86rem,.82rem + .15vw,.94rem);
+  --step-0:clamp(1rem,.97rem + .2vw,1.1rem);
+  --step-1:clamp(1.18rem,1.08rem + .45vw,1.42rem);
+  --step-2:clamp(1.45rem,1.25rem + .9vw,1.95rem);
+  --step-3:clamp(2rem,1.45rem + 2.4vw,3.3rem);
+  --step-4:clamp(2.6rem,1.55rem + 4.6vw,5.4rem);
+  --gutter:clamp(16px,4vw,40px);
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--cream)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:var(--step-0);line-height:1.6}
+img,svg{max-width:100%}
+a{color:var(--ink)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--tomato);outline-offset:3px}
+h1,h2,h3{font-family:var(--sans);font-weight:800;line-height:1.02;letter-spacing:-.025em;text-wrap:balance;margin:0}
+h1{font-size:var(--step-4);letter-spacing:-.035em;line-height:.98}
+h2{font-size:var(--step-3)}
+h3{font-size:var(--step-1);letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+.wrap{max-width:1160px;margin-inline:auto;padding-inline:var(--gutter)}
+.eyebrow{font-family:var(--mono);font-weight:600;font-size:var(--step--1);letter-spacing:.12em;text-transform:uppercase;color:var(--red-text)}
+.lede{font-size:var(--step-1);line-height:1.5;color:var(--soft);max-width:38ch}
+.section{padding-block:clamp(60px,8vw,112px)}
+.section-head{display:grid;gap:14px;max-width:46rem;margin-bottom:clamp(30px,4vw,52px)}
+.on-kraft{background:var(--kraft)}
+.on-ink{background:var(--ink);color:var(--cream)}
+.on-ink .eyebrow{color:var(--bright)}
+.on-ink .lede{color:var(--ink-soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;font:700 var(--step-0)/1 var(--sans);padding:.95em 1.4em;border-radius:999px;border:2px solid var(--ink);text-decoration:none;cursor:pointer;transition:transform .15s ease, background .15s ease, color .15s ease}
+.btn-primary{background:var(--red);border-color:var(--red);color:var(--cream)}
+.btn-primary:hover{background:var(--ink);border-color:var(--ink)}
+.btn-ghost{background:transparent;color:var(--ink)}
+.btn-ghost:hover{background:var(--kraft)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:default}
+.q{color:var(--tomato)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Header */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--cream) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:70px}
+.brand{display:block;flex:none;line-height:0}
+.brand img{height:46px;width:auto}
+.nav{display:flex;align-items:center;gap:24px}
+.nav a{text-decoration:none;font-weight:700;font-size:var(--step--1)}
+.nav a:not(.btn):hover{text-decoration:underline;text-decoration-color:var(--tomato);text-decoration-thickness:2px;text-underline-offset:5px}
+.nav .btn{padding:.72em 1.15em;font-size:var(--step--1)}
+@media (max-width:840px){.nav a:not(.btn){display:none}}
+@media (max-width:380px){.brand img{height:38px}}
+
+/* Hero */
+.hero{padding-block:clamp(36px,6vw,84px) clamp(56px,7vw,100px);overflow-x:clip}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(40px,5vw,80px);align-items:center}
+.hero-copy{display:grid;gap:24px;min-width:0}
+.ringing{display:flex;align-items:center;gap:10px}
+.ringing i{width:10px;height:10px;border-radius:50%;background:var(--tomato);flex:none;box-shadow:0 0 0 0 rgba(216,55,31,.55)}
+.circled{position:relative;display:inline-block;white-space:nowrap}
+.circled svg{position:absolute;left:-7%;top:-16%;width:114%;height:136%;max-width:none;overflow:visible;pointer-events:none}
+.circled path{fill:none;stroke:var(--tomato);stroke-width:4;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:0}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.greet{display:grid;gap:4px;padding-top:10px;border-top:1px solid var(--rule)}
+.greet-words{font-family:var(--logo);font-size:clamp(1.55rem,1.2rem + 1.6vw,2.3rem);line-height:1.15;display:flex;flex-wrap:wrap;gap:.1em .55em}
+.greet-cap{font-size:var(--step--1);color:var(--soft)}
+@media (prefers-reduced-motion:no-preference){
+  .ringing i{animation:ring 1.6s ease-out infinite}
+  .circled path{animation:draw .9s .45s cubic-bezier(.6,.05,.3,1) both}
+}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(216,55,31,.55)}100%{box-shadow:0 0 0 12px rgba(216,55,31,0)}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+
+/* The kitchen ticket */
+.ticket-wrap{position:relative;margin:0;justify-self:center;width:100%;max-width:380px;filter:drop-shadow(0 22px 26px rgba(27,23,20,.18)) drop-shadow(0 2px 2px rgba(27,23,20,.12));transform:rotate(1.6deg)}
+.ticket{--z:14px;background:var(--paper);font-family:var(--mono);font-weight:500;font-size:.86rem;line-height:1.45;padding:34px 24px 36px;
+  -webkit-mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) 50% 0/var(--z) 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50% 100%/var(--z) 51% repeat-x;
+          mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) 50% 0/var(--z) 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50% 100%/var(--z) 51% repeat-x}
+.t-center{text-align:center}
+.t-brand{font-weight:600;letter-spacing:.18em;font-size:.74rem;color:var(--soft)}
+.t-no{font-weight:600;font-size:1.5rem;letter-spacing:.02em;margin-top:2px}
+.t-meta{display:flex;justify-content:space-between;gap:8px;font-size:.78rem;margin-top:10px}
+.t-cut{border:0;border-top:2px dashed var(--ink);margin:12px 0}
+.t-type{font-weight:600;letter-spacing:.14em;font-size:.8rem}
+.t-lines{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:5px}
+.t-lines li{display:flex;justify-content:space-between;gap:12px}
+.t-lines li span:last-child{color:var(--soft);white-space:nowrap}
+.t-lines .flag{color:var(--red-text);font-weight:600}
+.t-lines .flag span:last-child{color:var(--red-text)}
+.t-total{display:flex;justify-content:space-between;align-items:baseline;font-weight:600}
+.t-total .big{font-size:1.6rem}
+.t-foot{font-size:.76rem;color:var(--soft);margin-top:6px}
+.stamp{position:absolute;right:64px;bottom:60px;font-family:var(--mono);font-weight:600;font-size:1.05rem;letter-spacing:.14em;color:var(--red-text);border:3px solid var(--red-text);border-radius:6px;padding:.25em .55em;transform:rotate(-9deg);mix-blend-mode:multiply;opacity:.92}
+.ticket-sticker{position:absolute;width:136px;top:-60px;right:-52px;transform:rotate(12deg);filter:drop-shadow(0 6px 8px rgba(27,23,20,.22))}
+@media (max-width:520px){.ticket-sticker{width:104px;right:-10px;top:-56px}}
+@media (prefers-reduced-motion:no-preference){
+  .t-lines li{animation:print .45s ease both}
+  .t-lines li:nth-child(2){animation-delay:.12s}.t-lines li:nth-child(3){animation-delay:.24s}
+  .t-lines li:nth-child(4){animation-delay:.36s}.t-lines li:nth-child(5){animation-delay:.48s}
+  .stamp{animation:stamp .35s 1.1s cubic-bezier(.3,1.6,.5,1) both}
+}
+@keyframes print{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+@keyframes stamp{from{opacity:0;transform:rotate(-9deg) scale(1.7)}to{opacity:.92;transform:rotate(-9deg) scale(1)}}
+
+/* Towns strip */
+.towns{background:var(--tomato);color:var(--cream);display:flex;align-items:center;overflow:hidden;border-block:2px solid var(--ink)}
+.towns-label{flex:none;font-family:var(--mono);font-weight:600;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);align-self:stretch;display:flex;align-items:center;padding-inline:var(--gutter) 18px}
+.towns-track{display:flex;width:max-content;min-width:0}
+.towns-run{font-family:var(--logo);font-size:clamp(1.5rem,1.2rem + 1.2vw,2.1rem);white-space:nowrap;padding:.32em 0 .38em;padding-right:.6em}
+.towns-run b{font-weight:400;color:var(--ink);margin-inline:.45em}
+@media (prefers-reduced-motion:no-preference){.towns-track{animation:slide 38s linear infinite}}
+@keyframes slide{to{transform:translateX(-50%)}}
+@media (max-width:560px){.towns-label{display:none}}
+
+/* Missed-call estimate */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:start}
+.calc-form{display:grid;gap:22px;background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);padding:clamp(20px,3vw,32px);box-shadow:6px 6px 0 var(--ink)}
+.field{display:grid;gap:8px}
+.field label{font-weight:700}
+.field .row{display:flex;align-items:center;gap:14px}
+.field input[type=range]{flex:1;accent-color:var(--red);min-width:0}
+.field output{font-family:var(--mono);font-weight:600;font-size:1.15rem;min-width:5.5ch;text-align:right;font-variant-numeric:tabular-nums}
+.field .hint{font-size:var(--step--1);color:var(--soft)}
+.calc-result{display:grid;gap:16px;align-content:start;min-width:0}
+.calc-result .amount{font-family:var(--sans);font-weight:800;letter-spacing:-.04em;font-size:clamp(3.4rem,2.2rem + 5vw,6.4rem);line-height:.95;color:var(--tomato);font-variant-numeric:tabular-nums}
+.calc-result p{max-width:34ch}
+.calc-result .small{font-size:var(--step--1);color:var(--soft)}
+@media (max-width:840px){.calc{grid-template-columns:1fr}}
+
+/* How it works */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,40px);counter-reset:step}
+.steps li{display:grid;gap:10px;align-content:start;counter-increment:step}
+.steps li::before{content:counter(step);font-family:var(--logo);font-size:clamp(3.4rem,2.6rem + 3vw,5.2rem);line-height:.9;color:var(--tomato)}
+.steps p{color:var(--soft)}
+@media (max-width:840px){.steps{grid-template-columns:1fr}}
+
+/* What it handles */
+.handles{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--ink-rule)}
+.handles div{padding:24px 24px 26px 0;border-bottom:1px solid var(--ink-rule);display:grid;gap:8px;align-content:start}
+.handles div:not(:nth-child(3n)){border-right:1px solid var(--ink-rule);margin-right:24px}
+.handles h3{font-size:1.22rem}
+.handles p{color:var(--ink-soft);font-size:var(--step--1)}
+@media (max-width:900px){.handles{grid-template-columns:1fr 1fr}.handles div:not(:nth-child(3n)){border-right:0;margin-right:0}.handles div:nth-child(odd){border-right:1px solid var(--ink-rule);margin-right:24px}}
+@media (max-width:560px){.handles{grid-template-columns:1fr}.handles div:nth-child(odd){border-right:0;margin-right:0}.handles div{padding-right:0}}
+
+/* Demo restaurants */
+.demos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.demo{background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);padding:24px;display:grid;gap:12px;grid-template-rows:auto auto auto 1fr auto;min-width:0;box-shadow:6px 6px 0 var(--ink);transition:box-shadow .2s ease}
+.demo .made{font-family:var(--mono);font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red-text)}
+.demo h3{font-size:var(--step-2)}
+.demo .where{font-family:var(--mono);font-size:var(--step--1);color:var(--soft)}
+.demo ul{margin:0;padding-left:1.1em;color:var(--soft);font-size:var(--step--1);display:grid;gap:4px;align-content:start}
+.demo .actions{display:grid;gap:10px}
+.demo .tel{font-family:var(--mono);font-weight:600;font-size:1.05rem;text-align:center}
+.demo .status{font-family:var(--mono);font-size:var(--step--1);text-align:center;color:var(--red-text);min-height:1.4em}
+.demo.live{box-shadow:6px 6px 0 var(--tomato);outline:3px solid var(--tomato);outline-offset:2px}
+.demo-note{margin-top:24px;font-size:var(--step--1);color:var(--soft);max-width:62ch}
+@media (max-width:900px){.demos{grid-template-columns:1fr}}
+
+/* Pricing */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.plan{background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);padding:28px 24px;display:grid;gap:14px;grid-template-rows:auto auto auto 1fr;min-width:0}
+.plan.featured{background:var(--ink);color:var(--cream)}
+.plan .price{font-weight:800;letter-spacing:-.03em;font-size:var(--step-3);line-height:1;font-variant-numeric:tabular-nums}
+.plan .price small{font-weight:400;letter-spacing:0;font-size:var(--step--1);color:var(--soft)}
+.plan.featured .price small{color:var(--ink-soft)}
+.plan ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;align-content:start;font-size:var(--step--1)}
+.plan li{padding-left:1.4em;position:relative}
+.plan li::before{content:"";position:absolute;left:0;top:.5em;width:.62em;height:.62em;border-radius:50%;background:var(--tomato)}
+.plan.featured li::before{background:var(--bright)}
+.plan .tag{font-family:var(--mono);font-weight:600;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red-text)}
+.plan.featured .tag{color:var(--bright)}
+.trial{margin-top:30px;display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;justify-content:space-between;background:var(--red);color:var(--cream);border:2px solid var(--ink);border-radius:var(--radius);padding:26px clamp(20px,3vw,34px);box-shadow:6px 6px 0 var(--ink)}
+.trial p{max-width:54ch}
+.trial strong{font-family:var(--logo);font-weight:400;font-size:var(--step-2);line-height:1.15;display:block;margin-bottom:6px}
+.trial .btn{border-color:var(--cream);background:var(--cream);color:var(--ink)}
+.trial .btn:hover{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+@media (max-width:900px){.plans{grid-template-columns:1fr}}
+
+/* About */
+.about{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:start}
+.about .badge{width:clamp(104px,14vw,156px);aspect-ratio:1;border-radius:50%;background:var(--tomato);color:var(--cream);border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);display:grid;place-items:center;font-family:var(--logo);font-size:clamp(2.2rem,4vw,3.4rem);transform:rotate(-6deg)}
+.about-copy{display:grid;gap:16px;max-width:62ch;min-width:0}
+.about-copy p:not(.eyebrow){color:var(--soft)}
+@media (max-width:640px){.about{grid-template-columns:1fr}}
+
+/* FAQ */
+.faq{display:grid;gap:0;max-width:54rem;border-top:2px solid var(--ink)}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:18px 0;font-weight:700;font-size:var(--step-1);letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);font-weight:600;font-size:1.5rem;line-height:1;color:var(--red-text)}
+.faq details[open] summary::after{content:"\2013"}
+.faq details p{padding:0 0 22px;color:var(--soft);max-width:64ch}
+
+/* Contact */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:start}
+.contact-copy{display:grid;gap:16px;min-width:0}
+.contact-lines{display:grid;gap:6px;font-family:var(--mono);font-weight:600;font-size:1.05rem}
+form.lead{display:grid;gap:14px;background:var(--paper);border:2px solid var(--ink);border-radius:var(--radius);padding:clamp(20px,3vw,30px);box-shadow:6px 6px 0 var(--ink)}
+form.lead label{display:grid;gap:6px;font-weight:700;font-size:var(--step--1)}
+form.lead input,form.lead select,form.lead textarea{font:inherit;font-weight:400;font-size:1rem;color:var(--ink);background:var(--cream);border:1px solid rgba(27,23,20,.3);border-radius:8px;padding:.7em .8em;width:100%}
+form.lead .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+form.lead .note{font-size:.82rem;color:var(--soft);font-weight:400}
+.sent{font-family:var(--mono);color:var(--ink);background:var(--kraft);border-radius:8px;padding:12px 14px}
+@media (max-width:840px){.contact{grid-template-columns:1fr}form.lead .two{grid-template-columns:1fr}}
+
+/* Footer */
+footer{background:var(--ink);color:var(--cream);padding-block:48px 56px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:28px 48px;justify-content:space-between;align-items:center}
+footer a{color:var(--cream)}
+.foot-brand{display:grid;gap:12px;min-width:0}
+.foot-brand img{height:52px;width:auto}
+.foot-lines{display:grid;gap:6px;min-width:0}
+footer small{display:block;max-width:56ch;color:var(--ink-soft);font-size:.82rem;line-height:1.5}
+.foot-sticker{width:104px;transform:rotate(-8deg);flex:none}
+.hp{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="logo.svg" alt="Pronto Host" width="157" height="46"></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#demo">Try a demo</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">Questions</a>
+      <a class="btn btn-primary" href="#contact">Free month</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="eyebrow ringing"><i aria-hidden="true"></i>Line 1 ringing · Friday 6:58 PM</p>
+      <h1>Friday at 7. <span class="circled">Every call<svg viewBox="0 0 320 110" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M 44 20 C 120 -2 268 0 306 38 C 334 68 266 104 162 105 C 62 106 6 84 11 54 C 15 28 74 10 168 9"/></svg></span> answered.</h1>
+      <p class="lede">Pronto Host is an AI host that picks up your restaurant's phone when your team can't. It takes the booking or the order, tells callers it's an AI, and texts you everything.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#demo">Call a demo restaurant</a>
+        <a class="btn btn-ghost" href="#contact">Get a free month</a>
+      </div>
+      <div class="greet">
+        <p class="greet-words"><span>Hello<span class="q">?</span></span> <span lang="it">Pronto<span class="q">?</span></span> <span lang="es"><span class="q">¿</span>Bueno<span class="q">?</span></span></p>
+        <p class="greet-cap">Picks up in English, Italian and Spanish, whichever the caller speaks.</p>
+      </div>
+    </div>
+
+    <figure class="ticket-wrap" aria-label="A sample call, printed like a kitchen ticket: a table for four on Saturday, a nut allergy flagged, texted to the owner two minutes later">
+      <div class="ticket">
+        <div class="t-center">
+          <p class="t-brand">SAMPLE CALL</p>
+          <p class="t-no">CALL #0417</p>
+        </div>
+        <div class="t-meta"><span>FRI 6:42 PM</span><span>LINE 1 BUSY</span><span>EN</span></div>
+        <hr class="t-cut">
+        <p class="t-type">TABLE REQUEST</p>
+        <ul class="t-lines">
+          <li><span>Daniela R.</span><span>✓</span></li>
+          <li><span>Party of 4</span><span>Sat 7:30</span></li>
+          <li><span>Patio if it's open</span><span>noted</span></li>
+          <li class="flag"><span>NUT ALLERGY, 1 GUEST</span><span>flagged</span></li>
+          <li><span>Asked about parking</span><span>answered</span></li>
+        </ul>
+        <hr class="t-cut">
+        <div class="t-total"><span>COVERS</span><span class="big">4</span></div>
+        <p class="t-foot">Call 1 min 48 s · Texted to owner 6:44 PM</p>
+      </div>
+      <span class="stamp" aria-hidden="true">ANSWERED</span>
+      <img class="ticket-sticker" src="sticker.svg" alt="" width="136" height="136">
+    </figure>
+  </div>
+</section>
+
+<div class="towns">
+  <p class="sr">Matteo sets up restaurants in person in Vaughan, Woodbridge, Maple, Concord, Richmond Hill, Thornhill and King City.</p>
+  <span class="towns-label" aria-hidden="true">We come to you in</span>
+  <div class="towns-track" aria-hidden="true">
+    <span class="towns-run">Vaughan<b>·</b>Woodbridge<b>·</b>Maple<b>·</b>Concord<b>·</b>Richmond Hill<b>·</b>Thornhill<b>·</b>King City<b>·</b></span>
+    <span class="towns-run">Vaughan<b>·</b>Woodbridge<b>·</b>Maple<b>·</b>Concord<b>·</b>Richmond Hill<b>·</b>Thornhill<b>·</b>King City<b>·</b></span>
+  </div>
+</div>
+
+<section class="section on-kraft" id="cost">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">The problem</p>
+      <h2>The phone rings hardest when nobody can get to it.</h2>
+      <p class="lede">The host is seating a party of eight, the kitchen is slammed, and the phone keeps ringing. The caller hangs up and books somewhere else. Try your own numbers.</p>
+    </div>
+    <div class="calc">
+      <form class="calc-form" id="calc" onsubmit="return false">
+        <div class="field">
+          <label for="missed">Calls you miss in a week</label>
+          <div class="row"><input id="missed" type="range" min="1" max="60" value="12"><output for="missed" id="missedOut">12</output></div>
+          <p class="hint">Busy nights, lunch rush, before you open, after you close.</p>
+        </div>
+        <div class="field">
+          <label for="bill">Average bill for one of those callers</label>
+          <div class="row"><input id="bill" type="range" min="20" max="300" step="5" value="80"><output for="bill" id="billOut">$80</output></div>
+          <p class="hint">A take-out order, or a table's whole bill.</p>
+        </div>
+        <div class="field">
+          <label for="share">How many would have ordered or booked</label>
+          <div class="row"><input id="share" type="range" min="10" max="90" step="5" value="40"><output for="share" id="shareOut">40%</output></div>
+          <p class="hint">Some callers only want your hours. Many want to order.</p>
+        </div>
+      </form>
+      <div class="calc-result" aria-live="polite">
+        <p class="eyebrow">What those calls are worth</p>
+        <p class="amount" id="amount">$1,664</p>
+        <p>a month, going to the restaurant that picked up. That is <strong id="yearly">$19,968</strong> a year.</p>
+        <p class="small">This is your estimate from your numbers. A month of Pronto Host starts at $199.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <h2>Set up in a week. You keep your number.</h2>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>We sit down and learn your place</h3>
+        <p>Thirty minutes at your restaurant. Your menu, hours, reservation rules, parking, the questions people always ask, and who to call when it matters.</p>
+      </li>
+      <li>
+        <h3>Your calls roll over when you're busy</h3>
+        <p>Your phone company forwards calls after a few rings, or when you're closed. Your regulars still dial the same number they always have.</p>
+      </li>
+      <li>
+        <h3>You get a text after every call</h3>
+        <p>Bookings, take-out requests, catering leads and messages land on your phone in seconds. Anything urgent is texted to the manager right away.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section on-ink" id="what">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">What it handles</p>
+      <h2>The calls your team answers fifty times a week.</h2>
+    </div>
+    <div class="handles">
+      <div><h3>Reservations</h3><p>Name, party size, time, high chairs, birthdays. You get the details by text and put them in whatever you use now.</p></div>
+      <div><h3>Hours, directions, parking</h3><p>The questions that interrupt your staff every ten minutes, answered the same way every time.</p></div>
+      <div><h3>Menu and dietary questions</h3><p>Gluten-free, vegetarian, what's in the sauce. Allergies are written down and flagged for your staff. It never promises a dish is safe.</p></div>
+      <div><h3>Take-out</h3><p>Reads the order back, confirms pickup time, and sends it to you. Or texts the caller your online ordering link.</p></div>
+      <div><h3>Parties and catering</h3><p>Captures the date, headcount and budget, then sends you a lead you can call back the next morning.</p></div>
+      <div><h3>Three languages</h3><p>Answers in English, Italian or Spanish, whichever the caller speaks. Switches mid-call if Nonna takes the phone.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="demo">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Try it</p>
+      <h2>Go ahead. Try to trip it up.</h2>
+      <p class="lede">Book a table, order a pizza, change your mind halfway, or start in Italian or Spanish. Your browser will ask to use the microphone. Each demo call runs up to 3 minutes.</p>
+    </div>
+    <div class="demos">
+      <article class="demo" data-demo="rosalba">
+        <p class="made">Made-up restaurant</p>
+        <h3>Trattoria Rosalba</h3>
+        <p class="where">Woodbridge · Italian · dinner</p>
+        <ul><li>Book a table for Saturday</li><li>Ask about the private room for 30</li><li>Or start in Italian</li></ul>
+        <div class="actions">
+          <button class="btn btn-primary" type="button" data-start="rosalba" data-label="Talk in English">Talk in English</button>
+          <button class="btn btn-ghost" type="button" data-start="rosalba" lang="it" data-lang="it" data-label="Parla in italiano">Parla in italiano</button>
+          <p class="tel" data-tel="rosalba" hidden></p>
+          <p class="status" data-status="rosalba"></p>
+        </div>
+      </article>
+      <article class="demo" data-demo="forno">
+        <p class="made">Made-up restaurant</p>
+        <h3>Forno 905</h3>
+        <p class="where">Maple · pizza · take-out and delivery</p>
+        <ul><li>Order two large pizzas for pickup</li><li>Ask if the crust is vegan</li><li>Ask how late they're open</li></ul>
+        <div class="actions">
+          <button class="btn btn-primary" type="button" data-start="forno" data-label="Talk in English">Talk in English</button>
+          <button class="btn btn-ghost" type="button" data-start="forno" lang="it" data-lang="it" data-label="Parla in italiano">Parla in italiano</button>
+          <p class="tel" data-tel="forno" hidden></p>
+          <p class="status" data-status="forno"></p>
+        </div>
+      </article>
+      <article class="demo" data-demo="jacaranda">
+        <p class="made">Made-up restaurant</p>
+        <h3>Taquería La Jacaranda</h3>
+        <p class="where">Richmond Hill · Mexican · counter and catering</p>
+        <ul><li lang="es">Pregunta por el menú en español</li><li>Ask about a taco bar for 40</li><li>Ask what's spicy</li></ul>
+        <div class="actions">
+          <button class="btn btn-primary" type="button" data-start="jacaranda" data-label="Talk in English">Talk in English</button>
+          <button class="btn btn-ghost" type="button" data-start="jacaranda" lang="es" data-lang="es" data-label="Habla en español">Habla en español</button>
+          <p class="tel" data-tel="jacaranda" hidden></p>
+          <p class="status" data-status="jacaranda"></p>
+        </div>
+      </article>
+    </div>
+    <p class="demo-note">These three restaurants are made up so you can test without bothering anyone. Your restaurant's host would know your real menu, prices and rules. The demo lines share a monthly limit of call time; if one won't connect, text Matteo at <span data-config="phone"></span> and he'll show you in person.</p>
+  </div>
+</section>
+
+<section class="section on-kraft" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Pricing</p>
+      <h2>One table of four a week pays for it.</h2>
+      <p class="lede">Monthly, in Canadian dollars, plus HST. No contract. Cancel any month.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <p class="tag">Overflow</p>
+        <p class="price">$199<small> / month</small></p>
+        <p>Picks up when you're busy or closed.</p>
+        <ul><li>Hours, directions, menu questions</li><li>Takes messages and call-backs</li><li>Text summary after every call</li><li>Up to 400 minutes a month</li></ul>
+      </div>
+      <div class="plan featured">
+        <p class="tag">Host · most restaurants</p>
+        <p class="price">$349<small> / month</small></p>
+        <p>Your full phone host.</p>
+        <ul><li>Everything in Overflow</li><li>Takes reservations and take-out orders</li><li>English, Italian and Spanish</li><li>Texts the manager about urgent calls</li><li>Up to 1,000 minutes a month</li></ul>
+      </div>
+      <div class="plan">
+        <p class="tag">Full house</p>
+        <p class="price">$549<small> / month</small></p>
+        <p>For busy rooms and more than one location.</p>
+        <ul><li>Everything in Host</li><li>Up to two locations or lines</li><li>Catering and party leads</li><li>Monthly call report and menu updates</li><li>Up to 2,500 minutes a month</li></ul>
+      </div>
+    </div>
+    <div class="trial">
+      <p><strong>Your first month is free.</strong>We set it up, you use it for a month, and you decide. The $299 setup fee is waived for our first ten restaurants.</p>
+      <a class="btn" href="#contact">Start my free month</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap about">
+    <div class="badge" aria-hidden="true">ML</div>
+    <div class="about-copy">
+      <p class="eyebrow">Who's behind it</p>
+      <h2>Local. He'll come to you.</h2>
+      <p>Pronto Host is run by Matteo Lan from Maple. He has answered business phones since 2018, worked the Longo's bakery counter, and spent a summer in the kitchen of an Italian restaurant in Corfu. He speaks English and Spanish, and enough Italian to take your order.</p>
+      <p>He sets up every restaurant in person, tests the calls with you, and is the one who picks up when you need a change.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section on-kraft" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Questions owners ask</p>
+      <h2>Straight answers.</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Will callers know it's not a person?</summary><p>Yes. The greeting says it's your restaurant's AI host, and if anyone asks, it says so plainly. Most callers care that someone picked up and got it right.</p></details>
+      <details><summary>Can a caller reach a real person?</summary><p>Yes. If a caller asks for a person, the host takes their name and number and texts the manager right away to call back.</p></details>
+      <details><summary>Do I have to change my phone number?</summary><p>No. Your phone company forwards calls to Pronto Host when the line is busy, after a set number of rings, or after hours. Bell, Rogers and most business lines can do this, and we help you set it up.</p></details>
+      <details><summary>What if it can't answer something?</summary><p>It takes a message with the caller's name and number and texts it to you right away, so someone can call back.</p></details>
+      <details><summary>How does it handle allergies?</summary><p>Carefully. It tells callers what's on your menu sheet, writes down every allergy, and flags it for your staff. It never tells a caller a dish is safe for their allergy. That stays with your kitchen.</p></details>
+      <details><summary>Are calls recorded? What about privacy?</summary><p>Callers are told at the start that the call may be recorded to get their order right. Recordings and caller details belong to your restaurant, are used only to serve your callers, and are deleted on request.</p></details>
+      <details><summary>What happens when I change the menu or hours?</summary><p>Text or email Matteo. Changes are usually live the same day, and holiday hours are included.</p></details>
+      <details><summary>What if I go over my minutes?</summary><p>Nothing gets cut off. We'll tell you, and if it happens two months in a row we'll suggest the plan that fits.</p></details>
+      <details><summary>Is there a contract?</summary><p>No. After your free month it's month to month. Cancel with one text or email.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap contact">
+    <div class="contact-copy">
+      <p class="eyebrow">Free month</p>
+      <h2>Let's get your phone answered.</h2>
+      <p class="lede">Tell us where you are. Matteo will call you back the same day and come by at a quiet hour, usually between lunch and dinner.</p>
+      <div class="contact-lines">
+        <span data-config="phone"></span>
+        <span data-config="email">hello@prontohost.ca</span>
+      </div>
+    </div>
+    <form class="lead" name="trial" method="POST" data-netlify="true" netlify-honeypot="company-website" id="leadForm">
+      <input type="hidden" name="form-name" value="trial">
+      <p class="hp"><label>Leave this empty <input name="company-website"></label></p>
+      <div class="two">
+        <label>Your name<input id="f-name" name="name" autocomplete="name" required></label>
+        <label>Restaurant<input id="f-rest" name="restaurant" required></label>
+      </div>
+      <div class="two">
+        <label>Phone<input id="f-phone" name="phone" type="tel" autocomplete="tel" required></label>
+        <label>Town
+          <select id="f-town" name="town">
+            <option>Vaughan / Maple</option><option>Woodbridge</option><option>Concord</option><option>Richmond Hill</option><option>Thornhill</option><option>King City</option><option>Toronto</option><option>Somewhere else</option>
+          </select>
+        </label>
+      </div>
+      <label>Best time to call<input id="f-time" name="best-time" placeholder="e.g. weekdays 3 to 4 PM"></label>
+      <label>Anything we should know<textarea id="f-notes" name="notes" rows="3" placeholder="How you take bookings now, busiest nights, languages your callers speak"></textarea></label>
+      <button class="btn btn-primary" type="submit">Start my free month</button>
+      <p class="note">We use these details only to call you back about Pronto Host.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-brand">
+      <a href="#top"><img src="logo-on-dark.svg" alt="Pronto Host" width="178" height="52"></a>
+      <small>An AI phone host for restaurants in the Greater Toronto Area. Maple, Ontario.</small>
+    </div>
+    <div class="foot-lines">
+      <span data-config="email">hello@prontohost.ca</span>
+      <span data-config="phone"></span>
+      <small>© 2026 Pronto Host. Callers are told when a call may be recorded. Caller details are used only to serve the restaurant they called. <a href="privacy.html">Privacy</a></small>
+    </div>
+    <img class="foot-sticker" src="sticker.svg" alt="" width="104" height="104">
+  </div>
+</footer>
+
+<script>
+/* ===== Settings Matteo fills in. Everything else reads from here. ===== */
+const CONFIG = {
+  phone: "(647) 771-8799",                       // Matteo's business line, e.g. "(905) 555-0123". Empty hides it.
+  email: "",                       // "hello@prontohost.ca" once the domain is bought. Empty hides it.
+  form: "text",                    // "text": the form opens a text to Matteo with the details filled in. "netlify": Netlify stores it.
+  demos: {                         // Agent IDs from the voice platform; phone = the demo line for that restaurant.
+    rosalba:   { name: "Trattoria Rosalba",     agentId: "agent_5501m4chqk9bfnyrnhzg49mbkyp3", phone: "" },
+    forno:     { name: "Forno 905",             agentId: "agent_6101m4chqn9bftkrpqbrk3y34xhe", phone: "" },
+    jacaranda: { name: "Taquería La Jacaranda", agentId: "agent_3101m4chqq09f7mrzkk02td8w3hj", phone: "" }
+  }
+};
+
+/* Contact details */
+document.querySelectorAll('[data-config]').forEach(el => {
+  const v = CONFIG[el.dataset.config];
+  if (v) el.textContent = v; else el.hidden = true;
+});
+
+/* Missed-call estimate */
+(function(){
+  const $ = id => document.getElementById(id);
+  const fmt = n => '$' + Math.round(n).toLocaleString('en-CA');
+  function update(){
+    const missed = +$('missed').value, bill = +$('bill').value, share = +$('share').value / 100;
+    $('missedOut').textContent = missed;
+    $('billOut').textContent = '$' + bill;
+    $('shareOut').textContent = Math.round(share * 100) + '%';
+    const monthly = missed * bill * share * 52 / 12;
+    $('amount').textContent = fmt(monthly);
+    $('yearly').textContent = fmt(monthly * 12);
+  }
+  ['missed','bill','share'].forEach(id => $(id).addEventListener('input', update));
+  update();
+})();
+
+/* Demo restaurants: browser voice calls through the voice platform */
+(function(){
+  let session = null, live = null, since = 0;   // live = the card key while a call is open; since = when it connected
+  const card = key => document.querySelector(`[data-demo="${key}"]`);
+  const buttons = key => card(key).querySelectorAll('[data-start]');
+  const status = (key, text) => { card(key).querySelector('[data-status]').textContent = text; };
+
+  Object.entries(CONFIG.demos).forEach(([key, d]) => {
+    const tel = card(key).querySelector('[data-tel]');
+    if (d.phone) { tel.textContent = 'Or call ' + d.phone; tel.hidden = false; }
+    if (!d.agentId) status(key, 'Demo line opens soon');
+  });
+
+  async function stop(message){
+    const key = live; live = null;
+    const s = session; session = null;
+    if (s) { try { await s.endSession(); } catch(e){} }
+    if (key) {
+      card(key).classList.remove('live');
+      buttons(key).forEach(b => { b.textContent = b.dataset.label; b.disabled = false; });
+      status(key, message || 'Call ended');
+    }
+  }
+
+  async function start(btn){
+    const key = btn.dataset.start, lang = btn.dataset.lang, d = CONFIG.demos[key];
+    if (!d.agentId) { status(key, 'Demo line opens soon. Use the form below and Matteo will call you.'); return; }
+    if (live === key) { await stop(); return; }
+    await stop();
+    live = key;
+    card(key).classList.add('live');
+    buttons(key).forEach(b => { if (b !== btn) b.disabled = true; });
+    btn.textContent = 'End call';
+    status(key, 'Connecting…');
+    try {
+      const mic = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mic.getTracks().forEach(t => t.stop());
+      const { Conversation } = await import('https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.27.0/+esm');
+      const options = {
+        agentId: d.agentId,
+        connectionType: 'webrtc',
+        onConnect: () => { since = Date.now(); status(key, 'Connected. Say hello.'); },
+        onDisconnect: () => { if (live === key) stop(Date.now() - since > 170000 ? 'Demo calls stop at 3 minutes. Call again to keep going.' : ''); },
+        onError: () => status(key, 'The line dropped. Try again.'),
+        onModeChange: m => status(key, m.mode === 'speaking' ? 'Host is speaking' : 'Listening')
+      };
+      if (lang) options.overrides = { agent: { language: lang } };
+      const s = await Conversation.startSession(options);
+      if (live !== key) { s.endSession(); return; }   // ended while connecting
+      session = s;
+    } catch (e) {
+      if (live === key) await stop(e && e.name === 'NotAllowedError' ? 'Allow the microphone to talk to the host.' : 'Could not connect. If it keeps happening, the demo lines may be at their monthly limit. Text Matteo for a live demo.');
+    }
+  }
+
+  document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => start(b)));
+})();
+
+/* Lead form. "text": opens a text to Matteo with the details filled in. "netlify": Netlify stores it.
+   Either way the visitor stays on the page and sees a thank-you. */
+(function(){
+  const form = document.getElementById('leadForm');
+  const digits = CONFIG.phone.replace(/\D/g, '');
+  if (CONFIG.form === 'text' && !digits) { form.hidden = true; return; }
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (CONFIG.form === 'text') {
+      const v = id => document.getElementById(id).value.trim();
+      const body = ['Pronto Host free month',
+                    v('f-name') + ', ' + v('f-rest') + ' (' + v('f-town') + ')',
+                    'Phone: ' + v('f-phone'),
+                    v('f-time') && 'Best time: ' + v('f-time'),
+                    v('f-notes')].filter(Boolean).join('\n');
+      const to = digits.length === 10 ? '+1' + digits : '+' + digits;
+      form.innerHTML = '<p class="sent">Your texting app should open with your details ready. Press send and Matteo will call you back the same day. If it did not open, text him at ' + CONFIG.phone + '.</p>';
+      location.href = 'sms:' + to + '?&body=' + encodeURIComponent(body);
+      return;
+    }
+    const data = new URLSearchParams(new FormData(form)).toString();
+    const btn = form.querySelector('button[type=submit]');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      const r = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data });
+      if (!r.ok) throw new Error(r.status);
+      form.innerHTML = '<p class="sent">Got it. Matteo will call you back today, or the next business morning if it\'s late.</p>';
+    } catch (err) {
+      btn.disabled = false; btn.textContent = 'Start my free month';
+      let p = form.querySelector('.err');
+      if (!p) { p = document.createElement('p'); p.className = 'note err'; form.appendChild(p); }
+      p.textContent = 'That did not send. Check your connection and try again, or text Matteo at ' + CONFIG.phone + '.';
+    }
+  });
+})();
+</script>
+</body>
+</html>
